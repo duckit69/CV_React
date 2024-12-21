@@ -6,11 +6,11 @@ import PracticalExperience from "./PracticalExperience";
 
 function CVLayout() {
   return (
-    <div className="cv-layout">
+    <main className="cv-layout">
       <PersonalDetails />
       <EducationalExperience />
       <PracticalExperience />
-    </div>
+    </main>
   );
 }
 
