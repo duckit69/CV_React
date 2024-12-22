@@ -1,146 +1,89 @@
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { v4 } from "uuid";
 
-function EducationalExperience() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [isAdding, setIsAdding] = useState(false);
-  const [educationList, setEducationList] = useState([]);
-  const [newEducation, setNewEducation] = useState({
-    id: uuidv4(),
-    school: " ",
-    title: "title",
+function newEducationObj() {
+  const education = {
+    id: v4(),
+    school: "",
+    title: "",
     dateFrom: "",
     dateTo: "Present",
-  });
+  };
+  return education;
+}
+
+function EducationalExperience() {
+  const [educationList, setEducationList] = useState([]);
+  const [newEducation, setNewEducation] = useState(newEducationObj());
+  const [isAdding, setIsAdding] = useState(false);
 
   function handleAddEducationButton() {
     setIsAdding(true);
   }
-  function handleAddForm(e) {
+  function handleAddEducationSubmit(e) {
     e.preventDefault();
-    setIsAdding(false);
     setEducationList([...educationList, newEducation]);
+    setNewEducation(newEducationObj());
+    setIsAdding(false);
   }
-  function handleDeleteEducation(key) {
-    setEducationList(educationList.filter((item) => item.id !== key));
+  function handleDeleteEducationButton(id) {
+    const newList = educationList.filter((item) => item.id !== id);
+    setEducationList(newList);
   }
-  function handleEditEducation(key) {
-    setIsEditing(true);
 
-  }
-  function handleUpdateEducation(e, key) {
-    e.preventDefault();
-    setIsEditing(false);
-
-    handleDeleteEducation(key);
-
-    setEducationList((prevList) => [...prevList, newEducation]);
-
-    setNewEducation({
-      id: uuidv4(),
-      school: " ",
-      title: "",
-      dateFrom: "",
-      dateTo: "",
-    })
-  }
   return (
     <>
       <h2>Educational Experience</h2>
-      <button type="button" onClick={handleAddEducationButton}>
-        Add Education
-      </button>
-      {/*Form for adding new education*/}
+      <button onClick={handleAddEducationButton}>Add Education</button>
       {isAdding == true ? (
-        <form onSubmit={handleAddForm}>
-          <input
-            type="text"
-            placeholder="School name"
-            onChange={(e) =>
-              setNewEducation((prev) => ({
-                ...prev,
-                school: e.target.value,
-              }))
-            }
-          />
-          <input
-            type="text"
-            placeholder="Title"
-            onChange={(e) =>
-              setNewEducation((prev) => ({
-                ...prev,
-                title: e.target.value,
-              }))
-            }
-          />
-          <input
-            type="date"
-            onChange={(e) =>
-              setNewEducation((prev) => ({
-                ...prev,
-                dateFrom: e.target.value,
-              }))
-            }
-          />
-          <input
-            type="date"
-            onChange={(e) =>
-              setNewEducation((prev) => ({
-                ...prev,
-                dateTo: e.target.value == "" ? "Present" : e.target.value,
-              }))
-            }
-          />
-          <input type="submit" />
-        </form>
-      ) : (
-        <></>
-      )}
-      {educationList.map((education) => (
-        <div key={education.id}>
-        {isEditing == false ? (
-          <>
-          <p>
-          <strong>School: </strong>
-          {education.school}
-        </p>
-        <p>
-          <strong>Title: </strong>
-          {education.title}
-        </p>
-        <p>
-          {education.dateFrom}
-          <strong> - </strong>
-          {education.dateTo}
-        </p>
-          </>
-        ) : (
-          <form onSubmit={(e) => handleUpdateEducation(e, education.id)}>
-            {console.log(education.id)}
-            <input type="text" 
-            placeholder={education.school}
-            onChange={(e) => setNewEducation( (prev) => ({
-              ...prev,
-              school: e.target.value,
-            }))}
+        <>
+          <form onSubmit={handleAddEducationSubmit}>
+            <input
+              type="text"
+              onChange={(e) => (newEducation.school = e.target.value)}
             />
-        <input type="submit" />
+            <input
+              type="text"
+              onChange={(e) => (newEducation.title = e.target.value)}
+            />
+            <input
+              type="date"
+              onChange={(e) => (newEducation.dateFrom = e.target.value)}
+            />
+            <input
+              type="date"
+              onChange={(e) => (newEducation.dateTo = e.target.value)}
+            />
+            <button type="submit">Add</button>
           </form>
-
-        )}
-          
-          {isEditing == false ? (<>
-            <button onClick={() => handleEditEducation(education.id)}>
-            Edit
-          </button>
-          <button onClick={() => handleDeleteEducation(education.id)}>
-            Delete
-          </button></>) : (<>
-
-          </>)}
-
-        </div>
-      ))}
+        </>
+      ) : (
+        <>
+          {educationList.map((item) => (
+            <div key={item.id}>
+              <p>
+                <strong>School: </strong>
+                {item.school}
+              </p>
+              <p>
+                <strong>Title: </strong>
+                {item.title}
+              </p>
+              <p>
+                <strong>Date From: </strong>
+                {item.dateFrom}
+              </p>
+              <p>
+                <strong>Date To: </strong>
+                {item.dateTo}
+              </p>
+              <button onClick={() => handleDeleteEducationButton(item.id)}>
+                Delete
+              </button>
+            </div>
+          ))}
+        </>
+      )}
     </>
   );
 }
