@@ -113,6 +113,36 @@ function EducationalExperience() {
                         }))
                       }
                     />
+                    <input
+                      type="text"
+                      value={tmpEducation.title}
+                      onChange={(e) =>
+                        setTmpEducation((obj) => ({
+                          ...obj,
+                          title: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="date"
+                      value={tmpEducation.dateFrom}
+                      onChange={(e) =>
+                        setTmpEducation((obj) => ({
+                          ...obj,
+                          dateFrom: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="date"
+                      value={tmpEducation.dateTo}
+                      onChange={(e) =>
+                        setTmpEducation((obj) => ({
+                          ...obj,
+                          dateTo: e.target.value,
+                        }))
+                      }
+                    />
                     <button type="submit">Edit</button>
                   </form>
                 </>
