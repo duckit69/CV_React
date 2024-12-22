@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function EducationalExperience() {
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [educationList, setEducationList] = useState([]);
   const [newEducation, setNewEducation] = useState({
-    id: Date.now(),
+    id: uuidv4(),
     school: " ",
     title: "title",
     dateFrom: "",
@@ -20,6 +21,11 @@ function EducationalExperience() {
     setIsAdding(false);
     setEducationList([...educationList, newEducation]);
   }
+  function handleDeleteEducation(key) {
+    setEducationList(educationList.filter((item) => item.id !== key));
+  }
+  function handleEditEducation(key) {}
+
   return (
     <>
       <h2>Educational Experience</h2>
@@ -87,6 +93,12 @@ function EducationalExperience() {
             <strong> - </strong>
             {education.dateTo}
           </p>
+          <button onClick={() => handleEditEducation(education.id)}>
+            Edit
+          </button>
+          <button onClick={() => handleDeleteEducation(education.id)}>
+            Delete
+          </button>
         </div>
       ))}
     </>
