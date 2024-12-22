@@ -24,8 +24,26 @@ function EducationalExperience() {
   function handleDeleteEducation(key) {
     setEducationList(educationList.filter((item) => item.id !== key));
   }
-  function handleEditEducation(key) {}
+  function handleEditEducation(key) {
+    setIsEditing(true);
 
+  }
+  function handleUpdateEducation(e, key) {
+    e.preventDefault();
+    setIsEditing(false);
+
+    handleDeleteEducation(key);
+
+    setEducationList((prevList) => [...prevList, newEducation]);
+
+    setNewEducation({
+      id: uuidv4(),
+      school: " ",
+      title: "",
+      dateFrom: "",
+      dateTo: "",
+    })
+  }
   return (
     <>
       <h2>Educational Experience</h2>
@@ -80,25 +98,47 @@ function EducationalExperience() {
       )}
       {educationList.map((education) => (
         <div key={education.id}>
+        {isEditing == false ? (
+          <>
           <p>
-            <strong>School: </strong>
-            {education.school}
-          </p>
-          <p>
-            <strong>Title: </strong>
-            {education.title}
-          </p>
-          <p>
-            {education.dateFrom}
-            <strong> - </strong>
-            {education.dateTo}
-          </p>
-          <button onClick={() => handleEditEducation(education.id)}>
+          <strong>School: </strong>
+          {education.school}
+        </p>
+        <p>
+          <strong>Title: </strong>
+          {education.title}
+        </p>
+        <p>
+          {education.dateFrom}
+          <strong> - </strong>
+          {education.dateTo}
+        </p>
+          </>
+        ) : (
+          <form onSubmit={(e) => handleUpdateEducation(e, education.id)}>
+            {console.log(education.id)}
+            <input type="text" 
+            placeholder={education.school}
+            onChange={(e) => setNewEducation( (prev) => ({
+              ...prev,
+              school: e.target.value,
+            }))}
+            />
+        <input type="submit" />
+          </form>
+
+        )}
+          
+          {isEditing == false ? (<>
+            <button onClick={() => handleEditEducation(education.id)}>
             Edit
           </button>
           <button onClick={() => handleDeleteEducation(education.id)}>
             Delete
-          </button>
+          </button></>) : (<>
+
+          </>)}
+
         </div>
       ))}
     </>
