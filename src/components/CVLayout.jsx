@@ -1,5 +1,3 @@
-import React from "react";
-
 import PersonalDetails from "./PersonalDetails";
 import EducationalExperience from "./EducationalExperience";
 import PracticalExperience from "./PracticalExperience";
