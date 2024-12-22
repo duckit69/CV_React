@@ -1,5 +1,6 @@
 
 function EducationalExperience() {
+  
   return (
     <section>
       <h2>Educational Experience</h2>
