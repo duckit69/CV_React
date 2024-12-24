@@ -14,7 +14,7 @@ function practicalExperienceObj() {
 }
 
 function PracticalExperience() {
-  const [practicalExperienceList, setpracticalExperienceList] = useState([]);
+  const [practicalExperienceList, setPracticalExperienceList] = useState([]);
   const [practicalExperience, setPracticalExperience] = useState(
     practicalExperienceObj()
   );
@@ -28,7 +28,7 @@ function PracticalExperience() {
   function handleAddPracticalExperienceSubmit(e) {
     e.preventDefault();
     setIsAdding(false);
-    setpracticalExperienceList([
+    setPracticalExperienceList([
       ...practicalExperienceList,
       practicalExperience,
     ]);
@@ -43,7 +43,26 @@ function PracticalExperience() {
     }));
     setCurrentResponsibility("");
   }
-
+  function handleDeletePracticalExperience(id) {
+    setPracticalExperienceList(
+      practicalExperienceList.filter((item) => item.id !== id)
+    );
+  }
+  function handleDeleteResponsibility(res, id) {
+    setPracticalExperienceList((prevList) =>
+      prevList.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            responsibilities: item.responsibilities.filter(
+              (resp) => resp !== res
+            ),
+          };
+        }
+        return item;
+      })
+    );
+  }
   return (
     <section>
       <h2>PracticalExperience</h2>
@@ -103,8 +122,24 @@ function PracticalExperience() {
                 <strong>Responsibilities: </strong>
               </p>
               {experience.responsibilities.map((responsibily) => (
-                <p key={responsibily}>{responsibily}</p>
+                <ul key={responsibily}>
+                  <li>{responsibily}</li>
+                  <li>
+                    <button
+                      onClick={() =>
+                        handleDeleteResponsibility(responsibily, experience.id)
+                      }
+                    >
+                      Delete
+                    </button>
+                  </li>
+                </ul>
               ))}
+              <button
+                onClick={() => handleDeletePracticalExperience(experience.id)}
+              >
+                Delete
+              </button>
             </div>
           ))}
         </>
