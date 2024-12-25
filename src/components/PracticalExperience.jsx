@@ -9,7 +9,7 @@ function practicalExperienceObj() {
     position: "",
     responsibilities: [],
     dateFrom: "",
-    dateTo: "",
+    dateTo: "Present",
   };
 }
 
@@ -24,7 +24,11 @@ function PracticalExperience() {
     useState(null);
 
   const [tmpResponsibility, setTmpResponsibility] = useState("");
-
+  const [tmpPracticalExperience, setTmpPracticalExperience] = useState(
+    practicalExperienceObj()
+  );
+  const [isEdditingPracticalExperience, setIsEdditingPracticalExperience] =
+    useState(null);
   function handleAddPracticalExperienceButton() {
     setIsAdding(true);
   }
@@ -67,7 +71,7 @@ function PracticalExperience() {
       })
     );
   }
-  function handleEditResponsibility(resp, id) {
+  function handleEditResponsibility(resp) {
     setIsEddittingResponsibility(resp);
     setTmpResponsibility(resp);
   }
@@ -84,6 +88,24 @@ function PracticalExperience() {
         return item;
       })
     );
+    setTmpResponsibility("");
+  }
+  function handleEditPracticalExperienceButton(id) {
+    setIsEdditingPracticalExperience(id);
+    const obj = {
+      ...practicalExperienceList.find((item) => item.id == id),
+      id: tmpPracticalExperience.id,
+    };
+    setTmpPracticalExperience(obj);
+  }
+  function handleEditPracticalExperienceSubmit(e, id) {
+    e.preventDefault();
+    handleDeletePracticalExperience(id);
+    setPracticalExperienceList((prevList) => [
+      ...prevList,
+      tmpPracticalExperience,
+    ]);
+    setIsEdditingPracticalExperience(null);
   }
   return (
     <section>
@@ -112,6 +134,24 @@ function PracticalExperience() {
                 }))
               }
             />
+            <input
+              type="date"
+              onChange={(e) =>
+                setPracticalExperience((prev) => ({
+                  ...prev,
+                  dateFrom: e.target.value,
+                }))
+              }
+            />
+            <input
+              type="date"
+              onChange={(e) =>
+                setPracticalExperience((prev) => ({
+                  ...prev,
+                  dateTo: e.target.value,
+                }))
+              }
+            />
             <div>
               <input
                 type="text"
@@ -134,12 +174,81 @@ function PracticalExperience() {
         <>
           {practicalExperienceList.map((experience) => (
             <div key={experience.id}>
-              <p>
-                <strong>Company: </strong> {experience.position}
-              </p>
-              <p>
-                <strong>Position: </strong> {experience.position}
-              </p>
+              {isEdditingPracticalExperience !== experience.id ? (
+                <>
+                  <p>
+                    <strong>Company: </strong> {experience.company}
+                  </p>
+                  <p>
+                    <strong>Position: </strong> {experience.position}
+                  </p>
+                  <p>
+                    <strong>Date From: </strong>
+                    {experience.dateFrom}
+                  </p>
+                  <p>
+                    <strong>Date To: </strong>
+                    {experience.dateTo}
+                  </p>
+                  <button
+                    onClick={() =>
+                      handleEditPracticalExperienceButton(experience.id)
+                    }
+                  >
+                    Edit
+                  </button>
+                </>
+              ) : (
+                <>
+                  <form
+                    onSubmit={(e) =>
+                      handleEditPracticalExperienceSubmit(e, experience.id)
+                    }
+                  >
+                    <input
+                      type="text"
+                      value={tmpPracticalExperience.company}
+                      onChange={(e) =>
+                        setTmpPracticalExperience((prev) => ({
+                          ...prev,
+                          company: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="text"
+                      value={tmpPracticalExperience.position}
+                      onChange={(e) =>
+                        setTmpPracticalExperience((prev) => ({
+                          ...prev,
+                          position: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="date"
+                      value={tmpPracticalExperience.dateFrom}
+                      onChange={(e) =>
+                        setTmpPracticalExperience((prev) => ({
+                          ...prev,
+                          dateFrom: e.target.value,
+                        }))
+                      }
+                    />
+                    <input
+                      type="date"
+                      value={tmpPracticalExperience.dateTo}
+                      onChange={(e) =>
+                        setTmpPracticalExperience((prev) => ({
+                          ...prev,
+                          dateTo: e.target.value,
+                        }))
+                      }
+                    />
+                    <button type="submit">Update</button>
+                  </form>
+                </>
+              )}
               <p>
                 <strong>Responsibilities: </strong>
               </p>
@@ -203,15 +312,3 @@ function PracticalExperience() {
 }
 
 export default PracticalExperience;
-
-/* <p>Company Name: companyName</p>
-      <p>Position Title: positionTitle</p>
-      <p>Responsibilities</p>
-      <ul>
-        <li>First</li>
-        <li>Second</li>
-        <li>Third</li>
-        <li>Forth</li>
-      </ul>
-      <p>From: </p>
-      <p>To: </p> */
