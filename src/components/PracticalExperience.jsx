@@ -20,6 +20,10 @@ function PracticalExperience() {
   );
   const [isAdding, setIsAdding] = useState(false);
   const [currentResponsibility, setCurrentResponsibility] = useState("");
+  const [isEddittingResponsibility, setIsEddittingResponsibility] =
+    useState(null);
+
+  const [tmpResponsibility, setTmpResponsibility] = useState("");
 
   function handleAddPracticalExperienceButton() {
     setIsAdding(true);
@@ -57,6 +61,24 @@ function PracticalExperience() {
             responsibilities: item.responsibilities.filter(
               (resp) => resp !== res
             ),
+          };
+        }
+        return item;
+      })
+    );
+  }
+  function handleEditResponsibility(resp, id) {
+    setIsEddittingResponsibility(resp);
+    setTmpResponsibility(resp);
+  }
+  function updateResponsibility(res, id) {
+    handleDeleteResponsibility(res, id);
+    setPracticalExperienceList((prevList) =>
+      prevList.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            responsibilities: [...item.responsibilities, tmpResponsibility],
           };
         }
         return item;
@@ -123,16 +145,48 @@ function PracticalExperience() {
               </p>
               {experience.responsibilities.map((responsibily) => (
                 <ul key={responsibily}>
-                  <li>{responsibily}</li>
-                  <li>
-                    <button
-                      onClick={() =>
-                        handleDeleteResponsibility(responsibily, experience.id)
-                      }
-                    >
-                      Delete
-                    </button>
-                  </li>
+                  {isEddittingResponsibility == responsibily ? (
+                    <>
+                      <input
+                        type="text"
+                        value={tmpResponsibility}
+                        onChange={(e) => setTmpResponsibility(e.target.value)}
+                      />
+                      <button
+                        onClick={() =>
+                          updateResponsibility(responsibily, experience.id)
+                        }
+                      >
+                        Update
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <li>{responsibily}</li>
+                      <li>
+                        <button
+                          onClick={() =>
+                            handleDeleteResponsibility(
+                              responsibily,
+                              experience.id
+                            )
+                          }
+                        >
+                          Delete
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleEditResponsibility(
+                              responsibily,
+                              experience.id
+                            )
+                          }
+                        >
+                          Edit
+                        </button>
+                      </li>
+                    </>
+                  )}
                 </ul>
               ))}
               <button
